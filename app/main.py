@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .database import Base, engine
-from .routers import ministries, import_router, departments
+from .routers import ministries, import_router, departments, staff
 # from sync import start_scheduler
 from fastapi.staticfiles import StaticFiles
 
@@ -29,8 +29,9 @@ app.add_middleware(
 
 app.mount("/photos", StaticFiles(directory="uploads/photos"), name="photos")
 
-app.include_router(ministries.router)
 app.include_router(import_router.router)
+app.include_router(ministries.router)
 app.include_router(departments.router)
+app.include_router(staff.router)
 
 # start_scheduler()

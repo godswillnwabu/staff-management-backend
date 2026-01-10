@@ -1,8 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-
-from app import crud
 from ..database import get_db
+from app import crud
 from .. import models, schemas
 
 
@@ -48,28 +47,6 @@ def create_ministry(ministry: schemas.MinistryCreate, db: Session = Depends(get_
     return m
 
 
-# @router.get("/{ministry_id}/departments", response_model=list[schemas.DepartmentRead])
-# def list_departments(ministry_id: int, db: Session = Depends(get_db)):
-#     return (
-#         db.query(models.Department)
-#         .filter(models.Department.ministry_id == ministry_id)
-#         .all()
-#     )
+
     
     
-@router.get("/{ministry_id}/departments", response_model=schemas.PaginatedDepartments)
-def paginated_departments(
-    ministry_id: int, 
-    page: int = 1, 
-    page_size: int = 9, 
-    db: Session = Depends(get_db)):
-    
-    offset = (page - 1) * page_size
-    items, total = crud.get_departments_paginated(db, ministry_id, offset, page_size)
-    
-    return {
-        "items": items,
-        "total": total,
-        "page": page,
-        "page_size": page_size
-    }

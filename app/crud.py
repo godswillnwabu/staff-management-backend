@@ -41,10 +41,11 @@ def get_ministries_paginated(db: Session, offset: int, limit: int):
 
 # ---------- Department -------------
 
-def get_department_by_id(db: Session, ministry, department_id: int):
-    return db.query(Department).filter(
-        Department.id == department_id
-        ).first()
+# def get_department_by_id(db: Session, ministry_id: int, department_id: int):
+#     return db.query(Department).filter(
+#         Department.id == department_id,
+#         Department.ministry_id == ministry_id
+#         ).first()
 
 
 def get_or_create_department(db: Session, ministry, name: str):
@@ -63,15 +64,8 @@ def get_or_create_department(db: Session, ministry, name: str):
     return dept
 
 
-# def get_departments_paginated(db: Session, ministry_id: int, offset: int, limit: int):
-#     q = db.query(Department).filter(
-#         Department.ministry_id == ministry_id,
-#     )
-#     items = q.offset(offset).limit(limit).all()
-#     total = q.count()
-#     return items, total
-
-def get_departments_paginated(db: Session, ministry_id: int, offset: int, limit: int):
+def get_departments_paginated(
+    db: Session, ministry_id: int, offset: int, limit: int):
     q = (
         db.query(
             Department,
@@ -96,7 +90,8 @@ def get_departments_paginated(db: Session, ministry_id: int, offset: int, limit:
 
 # ---------- Staff -------------
 
-def create_staff(db: Session, department, full_name, photo=None, gender=None, rank=None, level=None, post=None, first_appointment=None, retirement=None, native=None, phone_num=None):
+def create_staff(
+    db: Session, department, full_name, photo=None, gender=None, rank=None, level=None, post=None, first_appointment=None, retirement=None, native=None, phone_num=None):
     staff = Staff(
     full_name = full_name,
     photo = photo,
@@ -118,15 +113,31 @@ def create_staff(db: Session, department, full_name, photo=None, gender=None, ra
 
 
 def get_staff_paginated(
-    db: Session, department_id: int, search, rank, offset: int, limit: int):
-    q = db.query(Staff).filter(
-        Staff.department_id == department_id,
+    db: Session, 
+    ministry_id: int, 
+    department_id: int, 
+    search: str | None, 
+    rank: str | None, 
+    offset: int, 
+    limit: int
+):
+    q = (
+        db.query(Staff)
+        .join(Department, Staff.department_id == Department.id)
+        .filter(
+            Staff.department_id == department_id,
+            Department.ministry_id == ministry_id
+        )
     )
     
-    if search:
-        q = q.filter(Staff.full_name.ilike(f"%{search}%"))
+    if search is not None:
+        search = search.strip()
+        if search == "":
+            q = q.filter()
+        else:
+            q = q.filter(Staff.full_name.ilike(f"%{search}%"))
         
-    if rank:
+    if rank is not None:
         q = q.filter(Staff.rank == rank)
         
     items = q.offset(offset).limit(limit).all()
