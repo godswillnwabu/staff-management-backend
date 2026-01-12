@@ -17,6 +17,7 @@ def paginated_staff(
     rank: str | None = None,
     db: Session = Depends(get_db)
 ):
+    # print("SEARCH:", repr(search), "RANK:", repr(rank))
     offset = (page - 1) * page_size
     
     items, total = crud.get_staff_paginated(

@@ -130,18 +130,19 @@ def get_staff_paginated(
         )
     )
     
-    if search is not None:
+    if search:
         search = search.strip()
-        if search == "":
-            q = q.filter()
-        else:
-            q = q.filter(Staff.full_name.ilike(f"%{search}%"))
+        q = q.filter(Staff.full_name.ilike(f"%{search}%"))
         
-    if rank is not None:
-        q = q.filter(Staff.rank == rank)
+    if rank:
+        rank = rank.strip()
+        if rank.lower() != "all":
+            q = q.filter(Staff.rank == rank)
         
+    # print("SQL:", str(q))
     items = q.offset(offset).limit(limit).all()
     total = q.count()
+    
     
     return items, total
     
