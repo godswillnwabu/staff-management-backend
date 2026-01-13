@@ -5,6 +5,7 @@ from typing import List, Optional
 class StaffRead(BaseModel):
     id: int
     full_name: str
+    staff_id: str
     photo: Optional[str]
     gender: Optional[str]
     rank: Optional[str]
@@ -14,6 +15,7 @@ class StaffRead(BaseModel):
     retirement: Optional[str]
     native: Optional[str]
     phone_num: Optional[str]
+    
     department: Optional["DepartmentRead"]
     
     model_config = {"from_attributes": True}
@@ -23,6 +25,7 @@ class DepartmentRead(BaseModel):
     id: int
     name: str
     staff_count: Optional[int] = None
+    
     ministry: Optional["MinistryRead"]
     
     model_config = {"from_attributes": True}

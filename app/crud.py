@@ -91,9 +91,10 @@ def get_departments_paginated(
 # ---------- Staff -------------
 
 def create_staff(
-    db: Session, department, full_name, photo=None, gender=None, rank=None, level=None, post=None, first_appointment=None, retirement=None, native=None, phone_num=None):
+    db: Session, department, full_name, staff_id, photo=None, gender=None, rank=None, level=None, post=None, first_appointment=None, retirement=None, native=None, phone_num=None):
     staff = Staff(
     full_name = full_name,
+    staff_id = staff_id,
     photo = photo,
     gender = gender,
     rank = rank,

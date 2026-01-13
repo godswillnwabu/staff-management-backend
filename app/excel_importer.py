@@ -68,6 +68,7 @@ def process_excel_file(db: Session, filepath: str, ministry_id: int):
         if not dept_name or not full_name:
             continue
         
+        staff_id = clean_str(row.get("Staff ID"))
         photo = clean_str(row.get("Photo"))
         gender = clean_str(row.get("Sex"))
         rank = clean_str(row.get("Rank"))
@@ -80,4 +81,4 @@ def process_excel_file(db: Session, filepath: str, ministry_id: int):
         
         department = get_or_create_department(db, ministry, dept_name)
         
-        create_staff(db, department, full_name, photo, gender, rank, level, post, first_appointment, retirement, native, phone_num)
+        create_staff(db, department, full_name, staff_id, photo, gender, rank, level, post, first_appointment, retirement, native, phone_num)

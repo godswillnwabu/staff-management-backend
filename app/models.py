@@ -31,6 +31,7 @@ class Staff(Base):
     
     id = Column(Integer, primary_key=True, index=True)
     full_name = Column(String, nullable=False)
+    staff_id = Column(String, unique=True, nullable=False)
     photo = Column(String)
     gender = Column(String)
     rank = Column(String)
