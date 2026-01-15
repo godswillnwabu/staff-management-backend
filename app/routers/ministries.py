@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from ..database import get_db
 from app import crud
@@ -21,7 +22,7 @@ def get_ministry(ministry_id: int, db: Session = Depends(get_db)):
 #     return db.query(models.Ministry).all()
 
 
-@router.get("/", response_model=schemas.PaginatedMinistries)
+@router.get("", response_model=schemas.PaginatedMinistries)
 def paginated_ministries(
     page: int = 1, 
     page_size: int = 12, 
@@ -38,12 +39,19 @@ def paginated_ministries(
     }
     
     
-@router.post("/", response_model=schemas.MinistryRead)
+@router.post("", response_model=schemas.MinistryRead)
 def create_ministry(ministry: schemas.MinistryCreate, db: Session = Depends(get_db)):
-    m = models.Ministry(name=ministry.name)
+    m = models.Ministry(name=ministry.name.strip())
     db.add(m)
-    db.commit()
-    db.refresh(m)
+    try:
+        db.commit()
+        db.refresh(m)
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Ministry name already exist."
+        )
     return m
 
 
