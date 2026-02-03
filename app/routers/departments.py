@@ -7,12 +7,12 @@ from .. import schemas, crud
 router = APIRouter(prefix="/ministries", tags=["Departments"])
 
 
-# @router.get("/{ministry_id}/departments/{department_id}", response_model=schemas.DepartmentRead)
-# def get_department(ministry_id: int, department_id: int, db: Session = Depends(get_db)):
-#     d = crud.get_department_by_id(db, ministry_id=ministry_id, department_id=department_id)
-#     if not d:
-#         raise HTTPException(status_code=404, detail="Department not found")
-#     return d
+@router.get("/{ministry_id}/departments/{department_id}", response_model=schemas.DepartmentRead)
+def get_department(ministry_id: int, department_id: int, db: Session = Depends(get_db)):
+    d = crud.get_department_by_id(db, ministry_id=ministry_id, department_id=department_id)
+    if not d:
+        raise HTTPException(status_code=404, detail="Department not found")
+    return d
 
 
 @router.get("/{ministry_id}/departments", response_model=schemas.PaginatedDepartments)

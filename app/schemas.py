@@ -43,6 +43,9 @@ class MinistryCreate(BaseModel):
     name: str
     
     
+class MinistryUpdate(BaseModel):
+    name: str
+    
 class PaginatedBase(BaseModel):
     total: int
     page: int

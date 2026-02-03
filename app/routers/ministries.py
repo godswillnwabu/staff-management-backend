@@ -55,6 +55,28 @@ def create_ministry(ministry: schemas.MinistryCreate, db: Session = Depends(get_
     return m
 
 
+@router.put("/{ministry_id}", response_model=schemas.MinistryRead)
+def update_ministry(
+    ministry_id: int, 
+    ministry_update: schemas.MinistryUpdate, 
+    db: Session = Depends(get_db)
+):
+    m = crud.update_ministry_name_by_id(
+        db, 
+        ministry_id=ministry_id, 
+        new_name=ministry_update.name.strip()
+    )
+    if not m:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Ministry not found")
+    return m
+
+
+@router.delete("/{ministry_id}", response_model=schemas.MinistryRead)
+def delete_ministry(ministry_id: int, db: Session = Depends(get_db)):
+    m = crud.delete_ministry_by_id(db, ministry_id=ministry_id)
+    if not m:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Ministry not found")
+    return m
 
     
     

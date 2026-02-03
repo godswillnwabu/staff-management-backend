@@ -8,7 +8,7 @@ class Ministry(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, unique=True, nullable=False)
     # relationships
-    departments = relationship("Department", back_populates="ministry")
+    departments = relationship("Department", back_populates="ministry", cascade="all, delete-orphan")
     
     
 class Department(Base):

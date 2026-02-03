@@ -39,13 +39,30 @@ def get_ministries_paginated(db: Session, offset: int, limit: int):
     return results, total
 
 
+def update_ministry_name_by_id(db: Session, ministry_id: int, new_name: str):
+    m = db.query(Ministry).filter(Ministry.id == ministry_id).first()
+    if m:
+        m.name = new_name
+        db.commit()
+        db.refresh(m)
+    return m
+
+
+def delete_ministry_by_id(db: Session, ministry_id: int):
+    m = db.query(Ministry).filter(Ministry.id == ministry_id).first()
+    if m:
+        db.delete(m)
+        db.commit()
+    return m
+
+
 # ---------- Department -------------
 
-# def get_department_by_id(db: Session, ministry_id: int, department_id: int):
-#     return db.query(Department).filter(
-#         Department.id == department_id,
-#         Department.ministry_id == ministry_id
-#         ).first()
+def get_department_by_id(db: Session, ministry_id: int, department_id: int):
+    return db.query(Department).filter(
+        Department.id == department_id,
+        Department.ministry_id == ministry_id
+        ).first()
 
 
 def get_or_create_department(db: Session, ministry, name: str):
