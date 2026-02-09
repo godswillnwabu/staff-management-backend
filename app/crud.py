@@ -56,6 +56,14 @@ def delete_ministry_by_id(db: Session, ministry_id: int):
     return m
 
 
+def delete_ministry_by_name(db: Session, ministry_name: str):
+    m = db.query(Ministry).filter(Ministry.name == ministry_name).first()
+    if m:
+        db.delete(m)
+        db.commit()
+    return m
+
+
 # ---------- Department -------------
 
 def get_department_by_id(db: Session, ministry_id: int, department_id: int):

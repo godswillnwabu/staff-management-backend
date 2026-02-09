@@ -76,6 +76,13 @@ def delete_ministry(ministry_id: int, db: Session = Depends(get_db)):
     m = crud.delete_ministry_by_id(db, ministry_id=ministry_id)
     if not m:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Ministry not found")
+    return 
+
+@router.delete("", response_model=schemas.MinistryRead)
+def delete_ministry_by_name(name: str, db: Session = Depends(get_db)):
+    m = crud.delete_ministry_by_name(db, ministry_name=name.strip())
+    if not m:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Ministry not found")
     return m
 
     
